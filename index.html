@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>与古贤同频｜性格溯源测试</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "PingFang SC", "Microsoft YaHei", "SimSun", serif;
+  }
+  :root{
+    --bg-xuanzhi:#f7f3ec;
+    --zhu-hong:#b83c3c;
+    --zhe-he:#7a5c48;
+    --liu-huang:#c89b4e;
+    --mo-se:#44332a;
+    --fen-bian:#e9e2d8;
+    --border-soft:#d4c4b2;
+  }
+  body {
+    background: var(--bg-xuanzhi);
+    color: var(--mo-se);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 28px 20px 50px;
+  }
+  .page {
+    display: none;
+  }
+  .page.active {
+    display: block;
+  }
+  h1 {
+    font-size: 23px;
+    color: var(--zhu-hong);
+    margin-bottom: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+  .circle-emblem {
+    width: 124px;
+    height: 124px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: linear-gradient(140deg,#ddb877,#c89b4e,#b67c3e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
+    opacity:0.92;
+  }
+  .avatar-wrap {
+    width: 184px;
+    height: 184px;
+    margin: 0 auto 18px;
+    border-radius: 24px;
+    background: linear-gradient(160deg,#f3ece2,#e9ddcc);
+    border:1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-wrap::before {
+    content: "";
+    position: absolute;
+    inset:15px;
+    border-radius: 20px;
+    border:1px dashed #c89b4e;
+    opacity:0.45;
+  }
+  .role-symbol{
+    font-size:76px;
+    filter: drop-shadow(0 3px 8px rgba(122,92,72,0.28));
+  }
+  /*封面页*/
+  .cover {
+    text-align: center;
+    padding:40px 16px 30px;
+  }
+  .cover .intro {
+    font-size:14.5px;
+    color:var(--zhe-he);
+    margin-bottom:34px;
+  }
+  .start-btn {
+    background: var(--zhu-hong);
+    color:#fff;
+    border:none;
+    padding:14px 40px;
+    border-radius:999px;
+    font-size:16px;
+    letter-spacing:1px;
+  }
+  /*答题页*/
+  .question-page {
+    padding:22px 6px;
+  }
+  .q-index {
+    font-size:13px;
+    color:var(--liu-huang);
+    margin-bottom:8px;
+  }
+  .q-title {
+    font-size:17px;
+    color:var(--zhu-hong);
+    margin-bottom:26px;
+    font-weight:500;
+  }
+  .option-item {
+    border:1px solid var(--border-soft);
+    background:#fff;
+    border-radius:14px;
+    padding:15px 18px;
+    margin-bottom:13px;
+    font-size:15px;
+    transition:0.2s;
+  }
+  .option-item.selected {
+    background:#f6ece0;
+    border-color:var(--liu-huang);
+  }
+  .next-btn {
+    width:100%;
+    background:var(--zhu-hong);
+    color:#fff;
+    border:none;
+    padding:14px;
+    border-radius:999px;
+    font-size:16px;
+    margin-top:22px;
+  }
+  .next-btn:disabled {
+    background:#c9a399;
+  }
+  /*结果页*/
+  .result-page {
+    text-align:center;
+    padding:26px 12px;
+  }
+  .match-rate{
+    font-size:18px;
+    color:var(--zhu-hong);
+    margin:6px 0 10px;
+  }
+  .res-name {
+    font-size:24px;
+    color:var(--zhu-hong);
+    font-weight:500;
+    letter-spacing:1px;
+  }
+  .res-dynasty-tag{
+    color:var(--zhe-he);
+    font-size:14px;
+    margin-bottom:12px;
+  }
+  .keyword-row{
+    margin:14px 0;
+  }
+  .kw-tag{
+    display:inline-block;
+    background:var(--fen-bian);
+    color:var(--zhe-he);
+    padding:4px 12px;
+    border-radius:99px;
+    font-size:12.5px;
+    margin:3px 4px;
+  }
+  .gold-sentence{
+    font-style:italic;
+    color:var(--zhu-hong);
+    margin:16px 0 20px;
+    font-size:16px;
+  }
+  .res-card {
+    background:#fff;
+    border-radius:18px;
+    padding:24px 20px;
+    border:1px solid var(--border-soft);
+    text-align:left;
+    font-size:14.5px;
+    color:var(--mo-se);
+    margin-bottom:18px;
+  }
+  .res-card h4{
+    color:var(--zhu-hong);
+    margin-bottom:8px;
+    font-size:15px;
+    border-left:3px solid var(--liu-huang);
+    padding-left:8px;
+  }
+  .eight-dim{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:6px 10px;
+    margin:10px 0 16px;
+  }
+  .dim-item{
+    font-size:13.5px;
+    color:var(--zhe-he);
+  }
+  .quote-block{
+    margin:18px 0 8px;
+  }
+  .quote-line{
+    padding:6px 0;
+    color:var(--zhu-hong);
+    font-size:14.5px;
+  }
+  .disclaimer{
+    font-size:12px;
+    color:#887465;
+    margin-top:12px;
+  }
+  .result-buttons {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:14px;
+  }
+  .restart-btn, .share-btn, .gift-btn {
+    border:none;
+    padding:12px 22px;
+    border-radius:999px;
+    font-size:15px;
+  }
+  .restart-btn {
+    background:var(--zhu-hong);
+    color:#fff;
+  }
+  .share-btn {
+    background:var(--liu-huang);
+    color:#fff;
+  }
+  .gift-btn {
+    background:#fff;
+    color:var(--zhu-hong);
+    border:1px solid var(--zhu-hong);
+  }
+  /*弹窗*/
+  .tip-pop {
+    position:fixed;
+    left:50%;
+    top:45%;
+    transform:translate(-50%,-50%);
+    background:#fff;
+    padding:26px;
+    border-radius:16px;
+    border:1px solid var(--border-soft);
+    z-index:99;
+    width:82%;
+    max-width:330px;
+    display:none;
+  }
+  .tip-pop p {
+    margin-bottom:18px;
+    color:var(--mo-se);
+  }
+  .tip-pop button {
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:999px;
+    background:var(--zhu-hong);
+    color:white;
+  }
+  .mask {
+    position:fixed;
+    inset:0;
+    background:rgba(60,45,35,0.38);
+    z-index:98;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!--封面-->
+  <div id="cover" class="page active cover">
+    <div class="circle-emblem">古</div>
+    <h1>与古贤同频｜性格溯源测试</h1>
+    <div class="intro">
+      15道思辨选择题，观取舍而知心性<br>
+      匹配与你底色相近的历史人物，窥见自身格局 ✨
+    </div>
+    <button class="start-btn" onclick="startTest()">启始测试</button>
+  </div>
+
+  <!--答题区-->
+  <div id="qWrap" class="page question-page">
+    <div class="q-index"><span id="currentQ">1</span>/15</div>
+    <div class="q-title" id="qText"></div>
+    <div id="optWrap"></div>
+    <button class="next-btn" id="nextBtn" disabled onclick="nextQuestion()">下一题</button>
+  </div>
+
+  <!--结果页-->
+  <div id="resultWrap" class="page result-page">
+    <div class="avatar-wrap">
+      <span class="role-symbol" id="roleSymbol">📜</span>
+    </div>
+    <div class="res-name" id="roleName"></div>
+    <div class="res-dynasty-tag" id="dynastyInfo"></div>
+    <div class="match-rate" id="matchText"></div>
+    <div class="keyword-row" id="kwBox"></div>
+    <div class="gold-sentence" id="goldLine"></div>
+
+    <div class="res-card">
+      <h4>八维能力</h4>
+      <div class="eight-dim" id="eightDimBox"></div>
+
+      <h4>共同底色</h4>
+      <p id="baseText"></p>
+
+      <h4>现实定位</h4>
+      <p id="workPos"></p>
+      <p><strong>盲点：</strong><span id="blindText"></span></p>
+      <p><strong>建议：</strong><span id="advText"></span></p>
+      <p><strong>风险提示：</strong><span id="riskText"></span></p>
+
+      <div class="quote-block">
+        <h4>人物箴言</h4>
+        <div id="quoteBox"></div>
+      </div>
+      <div class="disclaimer">本测试仅供娱乐。不构成心理测评或历史评价。</div>
+    </div>
+
+    <div class="result-buttons">
+      <button class="restart-btn" onclick="resetTest()">重新溯源</button>
+      <button class="share-btn" onclick="showTip()">截图留存</button>
+      <a href="https://替换你的友礼链接" target="_blank">
+        <button class="gift-btn">礼遇通道</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!--弹窗-->
+<div class="mask" id="mask" onclick="closeTip()"></div>
+<div class="tip-pop" id="tipPop">
+  <p>💡 提示：当前结果页适合直接截图，分享给同好共鉴心性。</p>
+  <button onclick="closeTip()">知晓</button>
+</div>
+
+<script>
+const questions = [
+  {
+    q:"当一桩机遇伴随显著风险出现，你优先遵循哪一种思路？",
+    opts:[
+      {t:"多方推演得失，待条件完备、胜算可控再行推进",s:{诸葛亮:3,张良:2}},
+      {t:"审时度势，若价值足够，愿意承担对应代价破局",s:{武则天:3,曹操:2}},
+      {t:"不愿卷入纷争，优先保全自身安稳，避开变数",s:{陶渊明:3,苏轼:2}},
+      {t:"内心有所向往，但容易顾虑周遭看法，迟迟难下决断",s:{李清照:3,杨玉环:2}}
+    ]
+  },
+  {
+    q:"察觉他人在暗处构陷、非议你时，你更倾向？",
+    opts:[
+      {t:"不动声色留存凭据，静待合适时机厘清局面",s:{张良:3,孝庄太后:2}},
+      {t:"厘清是非边界，恩怨分明，不长久隐忍委屈",s:{韩信:3,李清照:2}},
+      {t:"不屑纠缠，主动疏远，减少交集消耗心神",s:{陶渊明:3,苏轼:2}},
+      {t:"情绪易受牵动，容易陷入内耗，不知如何应对",s:{杨玉环:3}}
+    ]
+  },
+  {
+    q:"你内心深层的追求，更贴近哪一类？",
+    opts:[
+      {t:"以才辅世，辅佐同道之人，成就长久功业",s:{诸葛亮:3}},
+      {t:"把握自身命运，自主抉择，主导前路走向",s:{武则天:3,上官婉儿:2}},
+      {t:"不求声名功业，只求心神自在，顺意而行",s:{陶渊明:3,苏轼:2}},
+      {t:"期许被善待珍视，不喜重压与权谋博弈",s:{杨玉环:3,李清照:2}}
+    ]
+  },
+  {
+    q:"体察人情世事，你的习惯是？",
+    opts:[
+      {t:"看透局势人心，但收敛锋芒，不轻易直言破局",s:{张良:3,孝庄太后:2}},
+      {t:"心中明晰，遇合适时机愿意坦率表达观点",s:{苏轼:3,韩信:2}},
+      {t:"本性向善，防备心较轻，愿意信任他人",s:{李清照:3,杨玉环:2}},
+      {t:"看透喧嚣之后，心生倦怠，向往清净自守",s:{陶渊明:3}}
+    ]
+  },
+  {
+    q:"共事时，上位者能力有限、决策失当，你会？",
+    opts:[
+      {t:"委婉进策，顺势引导，维护整体大局稳定",s:{诸葛亮:3,孝庄太后:2}},
+      {t:"不甘受制于局限，有机会便想要取而代之",s:{曹操:3}},
+      {t:"守好分内之事，不主动卷入权力争执",s:{陶渊明:3,苏轼:2}},
+      {t:"直言抗辩，容易冒犯上位者，招致嫌忌",s:{韩信:3}}
+    ]
+  },
+  {
+    q:"身处低谷、抱负难伸之时，你会？",
+    opts:[
+      {t:"沉潜蓄力，打磨自身，静待时机转机",s:{张良:3,孝庄太后:2}},
+      {t:"不甘沉寂，持续寻找翻盘的契机",s:{韩信:3,曹操:2}},
+      {t:"接纳境遇起落，于平淡之中寻取意趣",s:{苏轼:3,陶渊明:2}},
+      {t:"心绪脆弱，需要陪伴安抚，难以独自扛压",s:{李清照:3,杨玉环:2}}
+    ]
+  },
+  {
+    q:"做出重要抉择时，你的核心标尺是？",
+    opts:[
+      {t:"立足长远全局，权衡多方利害关系",s:{诸葛亮:3,孝庄太后:2}},
+      {t:"锚定自身目标，以自我志向优先",s:{武则天:3,上官婉儿:2}},
+      {t:"依从本心喜好，舒心自在最为要紧",s:{苏轼:3,陶渊明:2}},
+      {t:"看重情感联结，在意亲近之人态度",s:{李清照:3,杨玉环:2}}
+    ]
+  },
+  {
+    q:"关于情绪表露，你属于？",
+    opts:[
+      {t:"善于自持，喜怒不轻易显露于外",s:{武则天:3,张良:2,孝庄太后:2}},
+      {t:"大事可沉稳自持，小事难掩真实情绪",s:{诸葛亮:3,曹操:2}},
+      {t:"不擅长伪装，心绪自然流露在外",s:{韩信:3,李清照:2}},
+      {t:"不愿刻意伪装，喜怒哀乐皆直白可察",s:{杨玉环:3,苏轼:2}}
+    ]
+  },
+  {
+    q:"若手握话语权，你会如何行事？",
+    opts:[
+      {t:"维稳守局，审慎行事，庇护周遭安稳",s:{孝庄太后:3,诸葛亮:2}},
+      {t:"破旧立新，依照自身构想重塑秩序",s:{武则天:3,上官婉儿:2}},
+      {t:"不喜管束制衡，偏爱松弛无争的氛围",s:{苏轼:3,陶渊明:2}},
+      {t:"偏爱荣华安适，不愿承担繁重治理责任",s:{杨玉环:3}}
+    ]
+  },
+  {
+    q:"友人陷入祸难，你会？",
+    opts:[
+      {t:"冷静筹谋，在保全底线前提下施以援手",s:{张良:3,孝庄太后:2}},
+      {t:"重诺仗义，愿意不计得失相助",s:{韩信:3,李清照:2}},
+      {t:"给予精神慰藉，但规避卷入险境",s:{苏轼:3}},
+      {t:"畏惧牵连，下意识与麻烦保持距离",s:{杨玉环:3}}
+    ]
+  },
+  {
+    q:"看待功名利禄，你的态度是？",
+    opts:[
+      {t:"名利是成事的凭借，而非最终归宿",s:{诸葛亮:3,张良:2}},
+      {t:"值得争取，愿意为之付出代价",s:{武则天:3,上官婉儿:2,曹操:2}},
+      {t:"有无皆可，清贫安宁亦是佳境",s:{陶渊明:3,苏轼:2}},
+      {t:"喜爱繁华荣宠，享受被人珍视追捧",s:{杨玉环:3}}
+    ]
+  },
+  {
+    q:"与人博弈周旋时，你的风格是？",
+    opts:[
+      {t:"谋定而后动，以方略取胜，不逞一时意气",s:{张良:3,诸葛亮:2}},
+      {t:"果决强势，主动出击，掌握主动权",s:{曹操:3,武则天:2}},
+      {t:"不喜争斗，能避让便选择远离",s:{陶渊明:3,李清照:2}},
+      {t:"坦荡直率，不擅长迂回算计",s:{韩信:3,苏轼:2}}
+    ]
+  },
+  {
+    q:"闲暇求知，你更偏向探索？",
+    opts:[
+      {t:"谋略世事、人心规律、大局之道",s:{诸葛亮:3,张良:2}},
+      {t:"世间百态、山河风物、人文意趣",s:{苏轼:3,李清照:2}},
+      {t:"向内安顿，追求内心清净无扰",s:{陶渊明:3}},
+      {t:"雅致风物、浪漫美好的体验",s:{杨玉环:3}},
+      {t:"文辞政令、权衡调度、信息研判",s:{上官婉儿:3}}
+    ]
+  },
+  {
+    q:"当理想前路阻滞重重，难以抵达，你会？",
+    opts:[
+      {t:"坚守初心，竭尽所能，持续践行",s:{诸葛亮:3}},
+      {t:"调整路径，变通方式继续奔赴目标",s:{武则天:3,上官婉儿:2,张良:2}},
+      {t:"放下宏大愿景，换一种方式安顿自我",s:{苏轼:3,陶渊明:2}},
+      {t:"容易怅然灰心，陷入伤感",s:{李清照:3}}
+    ]
+  },
+  {
+    q:"你的心性底色，更契合哪一句？",
+    opts:[
+      {t:"智虑深沉，善观全局，知进退得失",s:{张良:3}},
+      {t:"意志坚韧，敢于破局，不臣服于定数",s:{武则天:3}},
+      {t:"心怀风雅，起落之间仍保有诗意",s:{苏轼:3}},
+      {t:"赤诚重义，才华外露，疏于机巧",s:{韩信:3}},
+      {t:"敏于文策，善辨信息，周旋于秩序之间",s:{上官婉儿:3}}
+    ]
+  }
+];
+
+const roleData = {
+  "上官婉儿":{
+    symbol:"📜",
+    dynasty:"唐代｜政治家、宫廷谋略家、文坛引领者",
+    kw:["敏于文辞","善辨局势","长袖周旋"],
+    gold:"文字可以是门，也可以是路。",
+    eight:{决断:82,共情:65,开创:78,表达:91,经营:76,独立:70,担当:74,洞察:88},
+    base:"你与上官婉儿共享一种特质：擅长在复杂规则、多方势力之间读懂信息、传递意见，借文辞与调度立足；你不是纯粹的反叛者，也不是随波逐流的人，懂得利用既有秩序保全自我、施展价值。",
+    workPos:"团队中的协调者、文案/策略/信息枢纽、中层调度角色；适合承接多方需求，做转译、梳理、上传下达的工作。",
+    blind:"容易习惯性周旋妥协，为维持平衡压抑自己真实立场。",
+    adv:"在关键事项上，适度亮出边界，不必永远做调和者。",
+    risk:"长期在多方博弈里消耗，容易分不清哪些是自己真正想要的目标。",
+    quotes:[
+      "文字可以是门，也可以是路。",
+      "别只看眼前这一手。",
+      "信息不全时，克制也是行动。"
+    ]
+  },
+  "诸葛亮":{
+    symbol:"🪭",
+    dynasty:"三国｜政治家、军事家、战略谋略家",
+    kw:["审慎布局","重诺守心","长于统筹"],
+    gold:"知其不可而为之，是本心，亦是选择。",
+    eight:{决断:80,共情:72,开创:75,表达:78,经营:85,独立:71,担当:94,洞察:86},
+    base:"你们底色是强烈的责任感与长远视野。习惯提前推演预案，重视承诺与信义，愿意为长期目标持续投入；你天然适合托以重任，但容易把所有人的责任揽到自己身上。",
+    workPos:"项目负责人、总策划、统筹岗、核心骨干；适合长期项目、需要稳定兜底的岗位。",
+    blind:"很难放手授权，习惯亲力亲为，容易透支精力。",
+    adv:"学会信任同伴，分清哪些事必须亲为，哪些可以托付。",
+    risk:"过度背负责任，在局面无力回天时容易陷入自我苛责。",
+    quotes:[
+      "知其不可而为之，是本心，亦是选择。",
+      "谋定而后动，方无大悔。",
+      "世间大事，贵在持久，不在一时锋芒。"
+    ]
+  },
+  "武则天":{
+    symbol:"👑",
+    dynasty:"唐代｜政治家、改革者、格局破局者",
+    kw:["意志坚韧","敢破成规","审势而行"],
+    gold:"命运从不是用来顺从的。",
+    eight:{决断:92,共情:55,开创:90,表达:76,经营:84, independent:88,担当:86,洞察:90},
+    base:"你们都拥有极强的内生意志，不轻易被身份、成见、他人评价困住；擅长逆风调整策略，目标清晰，愿意承受代价换取想要的结果，对自己的人生拥有主导欲。",
+    workPos:"创始人、负责人、决策者、开拓岗；适合需要从零破局、向上争取资源的位置。",
+    blind:"容易低估情感联结的价值，习惯用利弊衡量一切。",
+    adv:"强势之外留一点柔软，信任少数值得托付之人。",
+    risk:"防备心过重，长久紧绷，很难全然放松交付真心。",
+    quotes:[
+      "命运从不是用来顺从的。",
+      "规则是人定的，人亦可重塑规则。",
+      "凡欲成事，必先扛住非议。"
+    ]
+  },
+  "陶渊明":{
+    symbol:"🌾",
+    dynasty:"东晋｜文学家、隐士、精神自守者",
+    kw:["安守本心","不喜纷争","崇尚清宁"],
+    gold:"心之所安，便是归处。",
+    eight:{决断:60,共情:84,开创:52,表达:74,经营:58, independent:86,担当:56,洞察:72},
+    base:"你们都把精神安宁放在很高位置，对世俗内卷、权力争斗天然疏离；不是懦弱，是清醒地知道自己不愿以自由换取名利，愿意主动简化生活。",
+    workPos:"独立创作者、技术专精岗、低内耗的职能岗；适合少人际拉扯、有独处空间的环境。",
+    blind:"遇到不公压力时，优先选择逃避而非对峙。",
+    adv:"清净很好，但不必永远避开所有冲突，学会温和自保。",
+    risk:"过度回避竞争，容易错失本可以抓住的机会。",
+    quotes:[
+      "心之所安，便是归处。",
+      "繁华万千，不及一隅清风。",
+      "不必向所有人证明自己。"
+    ]
+  },
+  "韩信":{
+    symbol:"⚔️",
+    dynasty:"西汉｜军事家、战术天才、国士",
+    kw:["天赋卓绝","恩怨分明","锋芒外露"],
+    gold:"才华本是利刃，亦需懂得收鞘。",
+    eight:{决断:84,共情:62,开创:86,表达:70,经营:54, independent:76,担当:78,洞察:64},
+    base:"你们拥有突出的专业天赋，做事直接，重情义、知报恩；擅长攻坚破局，但对人心深处的猜忌、权力的残酷缺少预判，不懂收敛锋芒。",
+    workPos:"技术专家、攻坚骨干、业务尖刀；适合纯粹看能力、少权谋内耗的赛道。",
+    blind:"高估能力的权重，低估人情与猜忌的破坏力。",
+    adv:"才华之外，修习藏锋与进退之道。",
+    risk:"功劳显眼时容易引来忌惮，不懂得适时退让。",
+    quotes:[
+      "才华本是利刃，亦需懂得收鞘。",
+      "士为知己者，方肯倾力以赴。",
+      "善战者，不止会赢，更知何时止。"
+    ]
+  },
+  "李清照":{
+    symbol:"📜",
+    dynasty:"两宋｜词人、文学家、至情思辨者",
+    kw:["感知敏锐","风骨细腻","情志真挚"],
+    gold:"深情亦是清醒，脆弱自有风骨。",
+    eight:{决断:64,共情:92,开创:70,表达:88,经营:62, independent:74,担当:66,洞察:78},
+    base:"你们感知力极强，审美细腻，重真情；既能体会浪漫，也会在变故中生出独立思考；情绪起伏比旁人明显，容易被人情、故事牵动心神。",
+    workPos:"内容创作、审美策划、人文相关岗位；适合包容情绪、鼓励表达的团队。",
+    blind:"容易被情绪裹挟，在难过时难以理性决策。",
+    adv:"接纳敏感，同时建立情绪隔离的边界。",
+    risk:"太重感情，容易在关系里消耗自己。",
+    quotes:[
+      "深情亦是清醒，脆弱自有风骨。",
+      "人间悲欢，皆是见识。",
+      "心有所感，便值得落笔。"
+    ]
+  },
+  "曹操":{
+    symbol:"🍶",
+    dynasty:"东汉末｜政治家、军事家、雄主",
+    kw:["不拘小节","识才善用","果决务实"],
+    gold:"天下本无万全之道，取舍而已。",
+    eight:{决断:90,共情:52,开创:88,表达:78,经营:86, independent:84,担当:82,洞察:86},
+    base:"你们是结果导向的实践者，不被虚礼束缚，识人眼光锐利，应变极快；接纳世事复杂，不执着完美道德标签，愿意在变局里抓住机会。",
+    workPos:"业务负责人、开拓操盘手、资源整合者；适合高速变化、机遇多的赛道。",
+    blind:"习惯以利弊判断，容易忽略情感维系。",
+    adv:"成事之外，保留一份体恤，减少不必要的对立。",
+    risk:"多疑特质会慢慢消耗信任，需要有意识校准。",
+    quotes:[
+      "天下本无万全之道，取舍而已。",
+      "非常之时，当用非常之法。",
+      "宁可担非议，不可坐失时机。"
+    ]
+  },
+  "张良":{
+    symbol:"♟️",
+    dynasty:"西汉｜谋圣、战略家、知进退的智者",
+    kw:["看透得失","善观大势","功成知止"],
+    gold:"最高明的谋划，是懂得何时退场。",
+    eight:{决断:82,共情:64,开创:74,表达:72,经营:82, independent:82,担当:70,洞察:94},
+    base:"你们擅长站在高处看全局，能预判连锁后果，克制欲望；你不执着于站在台前，更在意局势走向，懂得激流勇退，不贪恋虚名。",
+    workPos:"战略顾问、幕后策划、方案智囊；适合出策略、做研判，不必冲在第一线。",
+    blind:"习惯旁观计算，很少全然投入热忱。",
+    adv:"偶尔放下推演，随心感受当下，不必永远理性。",
+    risk:"看得太透，容易生出疏离感，很难深度交付关系。",
+    quotes:[
+      "最高明的谋划，是懂得何时退场。",
+      "先见祸端，方得从容。",
+      "不争，有时才是最好的保全。"
+    ]
+  },
+  "杨玉环":{
+    symbol:"🌸",
+    dynasty:"唐代｜美人，风华浪漫的性情者",
+    kw:["热爱美好","性情烂漫","不喜机心"],
+    gold:"世间值得好好感受温柔与繁华。",
+    eight:{决断:54,共情:86,开创:56,表达:72,经营:60, independent:58,担当:54,洞察:60},
+    base:"你偏爱美好、松弛、温柔的环境，不擅长、也不喜欢算计博弈；你的力量不在权谋，而在感知美、传递暖意，天生适合被善待。",
+    workPos:"美学、体验、服务、氛围类岗位；适合少斗争、氛围柔和的环境。",
+    blind:"危机来临时自保预案不足，对人心阴暗预估偏低。",
+    adv:"在享受美好的同时，给自己留一条退路。",
+    risk:"把安全感寄托在他人庇护上，环境一变便容易被动。",
+    quotes:[
+      "世间值得好好感受温柔与繁华。",
+      "不必人人都要擅长博弈。",
+      "繁华如梦，尽兴而不沉沦。"
+    ]
+  },
+  "苏轼":{
+    symbol:"🌙",
+    dynasty:"北宋｜文学家、政治家、乐天达观者",
+    kw:["通达乐天","热爱人间","才思丰沛"],
+    gold:"风雨来时，亦可一蓑从容。",
+    eight:{决断:70,共情:86,开创:78,表达:90,经营:72, independent:78,担当:74,洞察:82},
+    base:"你们的内核是向内自洽的乐观。起落境遇很难彻底打倒你；你擅长从烟火、风物、文字里重建心境，有才情，待人宽厚，但不喜残酷的朝堂倾轧。",
+    workPos:"文化、教研、内容、综合协调；适合包容多元、允许松弛的团队。",
+    blind:"心性直率，说话容易无心得罪人。",
+    adv:"保持豁达，同时学会在复杂场合委婉收敛锋芒。",
+    risk:"过于看淡得失，关键节点容易缺少争胜的决心。",
+    quotes:[
+      "风雨来时，亦可一蓑从容。",
+      "人间有味，是清欢。",
+      "失意不是终点，是换一种行路。"
+    ]
+  },
+  "孝庄太后":{
+    symbol:"🏮",
+    dynasty:"清初｜政治家、大局托底者",
+    kw:["隐忍持重","调和平衡","长久托底"],
+    gold:"风雨之中，稳住便是大功。",
+    eight:{决断:84,共情:70,开创:72,表达:74,经营:86, independent:80,担当:90,洞察:88},
+    base:"你们擅长长期隐忍、多方平衡，把大局安稳放在第一位；你未必站在高光之下，却是动荡局面里托住底盘的人，习惯把责任优先于个人好恶。",
+    workPos:"维稳协调、传承管理、幕后托底、长辈型管理者。",
+    blind:"习惯性压抑自身诉求，长期忽略自己的心愿。",
+    adv:"不必永远以大局牺牲自我，给自己留出喘息空间。",
+    risk:"长期负重，容易积累疲惫，等到临界点才爆发。",
+    quotes:[
+      "风雨之中，稳住便是大功。",
+      "调和各方，比一战取胜更难。",
+      "一时的退让，是为长久的安稳。"
+    ]
+  }
+};
+
+let current = 0;
+let score = {
+  "上官婉儿":0,"诸葛亮":0,"武则天":0,"陶渊明":0,"韩信":0,
+  "李清照":0,"曹操":0,"张良":0,"杨玉环":0,"苏轼":0,"孝庄太后":0
+};
+let selectedOpt = null;
+const maxTotalScore = 45;
+
+function startTest(){
+  switchPage("qWrap");
+  renderQ();
+}
+function renderQ(){
+  const q = questions[current];
+  document.getElementById("currentQ").innerText = current+1;
+  document.getElementById("qText").innerText = q.q;
+  const wrap = document.getElementById("optWrap");
+  wrap.innerHTML = "";
+  selectedOpt = null;
+  document.getElementById("nextBtn").disabled = true;
+  q.opts.forEach(opt=>{
+    const div = document.createElement("div");
+    div.className = "option-item";
+    div.innerText = opt.t;
+    div.onclick = ()=>{
+      document.querySelectorAll(".option-item").forEach(o=>o.classList.remove("selected"));
+      div.classList.add("selected");
+      selectedOpt = opt;
+      document.getElementById("nextBtn").disabled = false;
+    }
+    wrap.appendChild(div);
+  })
+}
+function nextQuestion(){
+  for(let k in selectedOpt.s){
+    score[k] += selectedOpt.s[k];
+  }
+  current++;
+  if(current >= questions.length){
+    showResult();
+  }else{
+    renderQ();
+  }
+}
+function showResult(){
+  let maxKey = Object.keys(score)[0];
+  for(let k in score){
+    if(score[k]>score[maxKey]) maxKey = k;
+  }
+  const r = roleData[maxKey];
+  const rate = Math.round(score[maxKey]/maxTotalScore*100);
+  document.getElementById("roleSymbol").innerText = r.symbol;
+  document.getElementById("roleName").innerText = maxKey;
+  document.getElementById("dynastyInfo").innerText = r.dynasty;
+  document.getElementById("matchText").innerText = `心性匹配度：${rate}%`;
+  document.getElementById("goldLine").innerText = r.gold;
+  //关键词
+  let kwHtml = "";
+  r.kw.forEach(k=>kwHtml += `<span class="kw-tag">${k}</span>`);
+  document.getElementById("kwBox").innerHTML = kwHtml;
+  //八维
+  let dimHtml = "";
+  const dimList = [
+    ["决断",r.eight.决断],["共情",r.eight.共情],["开创",r.eight.开创],["表达",r.eight.表达],
+    ["经营",r.eight.经营],["独立",r.eight.independent||r.eight.独立],["担当",r.eight.担当],["洞察",r.eight.洞察]
+  ]
+  dimList.forEach(d=>dimHtml += `<div class="dim-item">${d[0]}：${d[1]}分</div>`);
+  document.getElementById("eightDimBox").innerHTML = dimHtml;
+  document.getElementById("baseText").innerText = r.base;
+  document.getElementById("workPos").innerText = r.workPos;
+  document.getElementById("blindText").innerText = r.blind;
+  document.getElementById("advText").innerText = r.adv;
+  document.getElementById("riskText").innerText = r.risk;
+  let qHtml = "";
+  r.quotes.forEach(s=>qHtml += `<div class="quote-line">▫ ${s}</div>`);
+  document.getElementById("quoteBox").innerHTML = qHtml;
+  switchPage("resultWrap");
+}
+function resetTest(){
+  current = 0;
+  score = {
+    "上官婉儿":0,"诸葛亮":0,"武则天":0,"陶渊明":0,"韩信":0,
+    "李清照":0,"曹操":0,"张良":0,"杨玉环":0,"苏轼":0,"孝庄太后":0
+  };
+  selectedOpt = null;
+  switchPage("cover");
+}
+function switchPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+function showTip(){
+  document.getElementById("mask").style.display="block";
+  document.getElementById("tipPop").style.display="block";
+}
+function closeTip(){
+  document.getElementById("mask").style.display="none";
+  document.getElementById("tipPop").style.display="none";
+}
+</script>
+</body>
+</html>
